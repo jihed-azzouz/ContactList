@@ -20,7 +20,7 @@ public class ContactsController : Controller
         _logger = logger;
     }
 
-    // GET: Contacts
+   
     public async Task<IActionResult> Index()
     {
         var Contacts = await _context.Contacts
@@ -37,7 +37,7 @@ public class ContactsController : Controller
         return View(Contacts);
     }
 
-    // GET: Contacts/Details/5
+    
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -69,39 +69,33 @@ public class ContactsController : Controller
         return View(ContactVM);
     }
 
-    // GET: Contacts/Create
+    
     public IActionResult Create()
     {
         ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
         return View("CreateEdit", new Contact());
     }
 
-    // POST: Contacts/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
+  
     public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,PhoneNumber,EmailAddress,CategoryId")] Contact Contacts)
     {
-        // Remove ModelState errors related to Category
-        ModelState.Remove("Category");
+       
+        
 
-        if (ModelState.IsValid)
-        {
+    
             Contacts.Date = DateTime.Now;
 
             _context.Add(Contacts);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-        else
-        {
-            // If ModelState is not valid, repopulate CategoryId SelectList and return to view
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", Contacts.CategoryId);
-            return View("CreateEdit", Contacts);
-        }
+       
+         
+        
     }
 
 
-    // GET: Contacts/Edit/5
+   
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -123,9 +117,9 @@ public class ContactsController : Controller
 
 
 
-    // POST: Contacts/Edit/5
+    
     [HttpPost]
-    [ValidateAntiForgeryToken]
+    
     public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,PhoneNumber,EmailAddress,CategoryId")] Contact Contacts)
     {
         if (id != Contacts.Id)
@@ -134,11 +128,7 @@ public class ContactsController : Controller
             return NotFound();
         }
 
-        // Remove ModelState errors related to Category
-        ModelState.Remove("Category");
-
-        if (ModelState.IsValid)
-        {
+      
             var existingContacts = await _context.Contacts.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
             if (existingContacts == null)
             {
@@ -151,17 +141,15 @@ public class ContactsController : Controller
             _context.Update(Contacts);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-        else
-        {
+       
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", Contacts.CategoryId);
             return View("CreateEdit", Contacts);
         }
-    }
+    
 
 
 
-    // GET: Contacts/Delete/5
+    
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -192,9 +180,9 @@ public class ContactsController : Controller
         return View(ContactVM);
     }
 
-    // POST: Contacts/Delete/5
+   
     [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
+    
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var Contacts = await _context.Contacts.FindAsync(id);
